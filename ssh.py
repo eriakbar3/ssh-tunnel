@@ -48,6 +48,7 @@ if __name__ == '__main__':
             tn.write(cmd.encode('ascii')+b"\n")
             tn.write(logout.encode('ascii')+b"\n")
             tn.interact()
+            
     except KeyboardInterrupt:
         print('Got KeyboardInterrupt, shutting down graceful')
     except Exception as e:
