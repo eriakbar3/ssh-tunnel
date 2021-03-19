@@ -32,21 +32,15 @@ app.get('/', (req, res) => {
       // res.send( ) );
 
     });
-  }else if (typeof q.query.olt_ip !== 'undefined') {
+  }
+  if (typeof q.query.routerport !== 'undefined' && typeof q.query.port !== 'undefined') {
+    // res.send("bro");
+
     res.send(namafile);
-
-    var command = 'python olt.py 930053 10.62.165.4 '+q.query.olt_ip+' 23 Falcon2020 "show gpon onu state gpon-olt_'+q.query.olt+'" >>'+n+'.txt';
-    console.log(command);
-    exec(command, (error, stdout, stderr) => {
-
-      console.log(`stdout: ${stdout}`);
-
-      // res.send( ) );
-
-    });
-  }else if (typeof q.query.info_ip !== 'undefined') {
-    res.send(namafile);
-    var command = 'python olt.py 930053 10.62.165.4 '+q.query.info_ip+' 23 Falcon2020 "show onu running config gpon-onu_'+q.query.olt+'" >>'+n+'.txt';
+    var command = 'python ssh.py surv2-apps 10.62.170.49 '+q.query.routerport+' 23 garudaadh038 "show card state">>'+n+'.txt';
+    // var command = "python ssh.py 930053 10.62.165.4 172.28.115.42 23 Mojave2020 >>"+n+".txt";
+    // res.send(command);
+    // "python ssh.py 930053 10.62.165.4 172.28.115.42 23 Mojave2020 >>"+n+".txt"
     console.log(command);
     exec(command, (error, stdout, stderr) => {
 
@@ -56,7 +50,6 @@ app.get('/', (req, res) => {
 
     });
   }
-
 
 })
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
