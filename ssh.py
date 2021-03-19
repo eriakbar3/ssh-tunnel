@@ -10,7 +10,7 @@ from paramiko import (
 
 
 @contextmanager
-def make_tunnel(ssh_user, ssh_password, ssh_host, ssh_port, dst_ip, dst_port):
+def make_tunnel(ssh_user, ssh_password, ssh_host, ssh_port, dst_ip, dst_port,command):
     client = SSHClient()
     client.set_missing_host_key_policy(MissingHostKeyPolicy())
     client.connect(hostname=ssh_host, username=ssh_user, password=ssh_password, port=ssh_port)
@@ -28,13 +28,25 @@ if __name__ == '__main__':
     parser.add_argument('dst_ip', type=str)
     parser.add_argument('dst_port', type=int)
     parser.add_argument('--ssh_port', type=int, default=22)
+    parser.add_argument('ssh_password', type=str)
+    parser.add_argument('command', type=str)
     args = parser.parse_args()
-    password = getpass('Please enter the password: ')
+
     try:
-        with make_tunnel(ssh_password=password, **vars(args)) as channel:
+        with make_tunnel( **vars(args)) as channel:
             tn = telnetlib.Telnet()
-            
+
             tn.sock = channel
+            user = 'surv2-apps'
+            password = 'Surv2bahagia'
+            cmd = args.command
+            logout = 'logout'
+            nomore = 'environment no more';
+            tn.write(user.encode('ascii')+b"\n")
+            tn.write(password.encode('ascii')+b"\n")
+            tn.write(nomore.encode('ascii')+b"\n")
+            tn.write(cmd.encode('ascii')+b"\n")
+            tn.write(logout.encode('ascii')+b"\n")
             tn.interact()
     except KeyboardInterrupt:
         print('Got KeyboardInterrupt, shutting down graceful')
